@@ -12,7 +12,7 @@ This paper is a direct response to [Ahlmann-Eltze et al. (Nature Methods 2025)](
 
 ### Phase 1: Problem Recognition — "Why does DL lose?"
 
-#### [Squidiff (Nature Methods 2026)](https://doi.org/10.1038/s41592-025-xxxxx)
+#### [Squidiff (Nature Methods 2026)](https://doi.org/10.1038/s41592-025-02877-y)
 - **Why we read it**: The baseline model we aimed to beat. A DiffAE-based conditional DDIM for perturbation prediction.
 - **Key observation**: Squidiff reports Pearson R > 0.9, but this threshold is also achieved by the Identity baseline (predicting control expression unchanged). This renders the metric essentially meaningless for evaluating perturbation-specific signal.
 - **Idea derived**: Mean-level Pearson is not the right evaluation axis for perturbation prediction. Distributional metrics are needed.
@@ -27,7 +27,7 @@ This paper is a direct response to [Ahlmann-Eltze et al. (Nature Methods 2025)](
 - **Why we read it**: Extends the Ahlmann-Eltze finding. A CRISPR-informed mean baseline beats GEARS and scGPT.
 - **Idea derived**: Domain-informed baselines outperform DL because they leverage **experimental metadata** (guide RNA identity, batch, plate), not because of model capacity. Our model should similarly exploit the biological structure of perturbations.
 
-#### [Systema (Nature Biotechnology 2025)](https://doi.org/10.1038/s41587-025-xxxxx)
+#### [Systema (Nature Biotechnology 2025)](https://doi.org/10.1038/s41587-025-02777-8)
 - **Why we read it**: Identifies the systematic variation confound in existing evaluation practices.
 - **Key content**: Systematic variation from batch, culture conditions, and other covariates confounds perturbation-specific signal. Models that merely predict this systematic component score well on standard metrics. Proposes centroid accuracy as a deconfounded metric.
 - **Idea derived**: Our leak-free evaluation (HVG and scaling fitted on train+ctrl only, then applied to test) partially addresses this concern. We should acknowledge Systema's critique in the paper.
@@ -54,11 +54,11 @@ This paper is a direct response to [Ahlmann-Eltze et al. (Nature Methods 2025)](
 - **Ideas derived**: **This was the decisive inspiration.** We hypothesized that STATE's key contribution is not scale (167M cells) but **set-attention** (population-level cell processing). If set-attention is the true driver, the same effect should appear in a 0.76M parameter model. This led directly to **Set-MMD Flow: combining STATE's set-attention with scDFM's MMD loss in a compact flow-matching model**.
 - **Supporting evidence**: (1) STATE evaluates on a context generalization task (with 30% support in the test context), not on the Norman combo holdout benchmark. We test directly on Norman. (2) STATE does not use E-distance or MMD as evaluation metrics. We make these our primary metrics. (3) STATE's 167M-cell scale is unreproducible, but the architectural idea is scale-free.
 
-#### [PerturbDiff (arXiv 2026)](https://arxiv.org/abs/xxxx)
+#### [PerturbDiff (arXiv 2026)](https://arxiv.org/abs/2602.19685)
 - **Why we read it**: Performs diffusion over distributions in RKHS, where the denoising objective itself becomes MMD.
 - **Idea derived**: An extreme approach to integrating distributional loss directly into the training objective. While theoretically cleaner than our MMD regularizer, kernel bandwidth selection is critical and batch-level computation is memory-intensive. We chose the more pragmatic approach of CFM + MMD as a regularizer.
 
-#### [SCALE (arXiv 2026)](https://arxiv.org/abs/2603.xxxxx)
+#### [SCALE (arXiv 2026)](https://arxiv.org/abs/2603.17380)
 - **Why we read it**: 184M parameter LLaMA-based gene encoder. Achieves PDCorr 0.953 vs linear 0.723 on Tahoe-100M.
 - **Idea derived**: Sufficient scale allows DL to beat linear baselines. However, PDCorr is a mean-level metric, and no distributional metrics are reported. The Tahoe-100M dataset scale is inaccessible to us. The **JiT (just-in-time) endpoint prediction** concept is interesting as an alternative to multi-step ODE integration.
 
@@ -152,10 +152,10 @@ Strengths of this positioning:
 | [STATE (bioRxiv 2025)](https://doi.org/10.1101/2025.06.26.661135) | Set-attention over cells idea | 167M scale; we achieve the same effect with 0.76M |
 | [CellFlow (bioRxiv 2025)](https://doi.org/10.1101/2025.04.03.646939) | Evidence that Additive can be beaten on Norman E-dist | PCA-space evaluation; ours is gene-space |
 | [Miller et al. (bioRxiv 2025)](https://doi.org/10.1101/2025.06.22641) | Metric choice changes conclusions | Proposes WMSE/NIR; we use E-dist/MMD |
-| [Systema (NB 2025)](https://doi.org/10.1038/s41587-025-xxxxx) | Systematic variation confound awareness | Evaluation framework; we use leak-free preparation |
+| [Systema (NB 2025)](https://doi.org/10.1038/s41587-025-02777-8) | Systematic variation confound awareness | Evaluation framework; we use leak-free preparation |
 | [Wong et al. (Bioinfo 2025)](https://doi.org/10.1093/bioinformatics/btaf317) | Domain-informed baselines are strong | CRISPR-specific; ours is general |
-| [Squidiff (NM 2026)](https://doi.org/10.1038/s41592-025-xxxxx) | DiffAE baseline to beat | We directly outperform it in P0 |
-| [SCALE (arXiv 2026)](https://arxiv.org/abs/2603.xxxxx) | Scale enables DL advantage | 184M + Tahoe-100M; we use 0.76M + 90k cells |
-| [PerturbDiff (arXiv 2026)](https://arxiv.org/abs/xxxx) | Theoretical basis for distributional loss (RKHS) | RKHS diffusion; we use pragmatic CFM+MMD |
+| [Squidiff (NM 2026)](https://doi.org/10.1038/s41592-025-02877-y) | DiffAE baseline to beat | We directly outperform it in P0 |
+| [SCALE (arXiv 2026)](https://arxiv.org/abs/2603.17380) | Scale enables DL advantage | 184M + Tahoe-100M; we use 0.76M + 90k cells |
+| [PerturbDiff (arXiv 2026)](https://arxiv.org/abs/2602.19685) | Theoretical basis for distributional loss (RKHS) | RKHS diffusion; we use pragmatic CFM+MMD |
 | [Unlasting (arXiv 2025)](https://arxiv.org/abs/2506.21107) | E-distance evaluation precedent | Dual DDIB; we use single flow |
 | [MolFormer (NMI 2022)](https://doi.org/10.1038/s42256-022-00580-7) | sci-Plex drug conditioning | We use it as a frozen feature extractor |
