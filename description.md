@@ -8,6 +8,14 @@ This paper is a direct response to [Ahlmann-Eltze et al. (Nature Methods 2025)](
 
 ---
 
+## Model Architecture
+
+![Set-MMD Flow Architecture](figures/fig1_architecture.png)
+
+**Figure 1.** Overview of Set-MMD Flow. **(A)** Conceptual comparison: the Additive baseline applies the same shift to all cells (preserving control variance), while Set-MMD Flow produces cell-aware velocities via set-attention, capturing perturbation-specific distributional changes. **(B)** Architecture: N=64 cells are encoded via MLP, combined with perturbation embedding and sinusoidal time embedding, then processed through 3 self-attention blocks where cells attend to each other (Q, K, V all derived from cell tokens). A cell decoder MLP outputs per-cell velocity vectors. **(C)** Training objective: CFM loss for per-cell velocity matching, combined with set-level MMD loss that compares the distribution of co-generated cells against real perturbed cells.
+
+---
+
 ## Papers Read and Ideas Derived
 
 ### Phase 1: Problem Recognition — "Why does DL lose?"
