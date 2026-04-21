@@ -1,4 +1,4 @@
-# Set-MMD Flow: Paper Description & Intellectual Journey
+# Set-MMD Flow
 
 ## Core Thesis
 
